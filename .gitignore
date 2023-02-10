@@ -31,6 +31,9 @@ bin/grpcurl
 *.rock
 
 bazel-*
-
 worktree/
 bin/bazel
+
+# wasm
+*.wasm
+target/

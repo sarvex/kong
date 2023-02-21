@@ -69,6 +69,15 @@
 
 ## Unreleased
 
+### Breaking Changes
+
+#### Plugins
+
+- **Session**: a new configuration field `read_bodies` was added with a default value of `false`,
+  that changes behavior of `logout_post_arg` in a way that it is not anymore considered if the
+  `read_bodies` is not explicitly set to `true`. This is to avoid session plugin from reading
+  request bodies by default on e.g. `POST` request for logout detection. 
+
 ### Additions
 
 #### Core
@@ -104,6 +113,11 @@
 
 - PDK now supports getting plugins' ID with `kong.plugin.get_id`.
   [#9903](https://github.com/Kong/kong/pull/9903)
+
+#### Plugins
+
+- **Session**: A new configuration parameter `read_bodies` was added with default value of `false`.
+  [#10333](https://github.com/Kong/kong/pull/10333)
 
 ### Fixes
 

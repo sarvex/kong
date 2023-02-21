@@ -92,6 +92,7 @@ return {
           { remember_absolute_timeout = { type = "number", default = 2592000 } },
           { response_headers = headers },
           { request_headers = headers },
+          { read_bodies = { type = "boolean", default = false } },
           { logout_methods = logout_methods },
           { logout_query_arg = {  type = "string",  default = "session_logout" } },
           { logout_post_arg = { type = "string", default = "session_logout" } },

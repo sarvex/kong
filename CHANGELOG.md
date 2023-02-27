@@ -1,5 +1,6 @@
 # Table of Contents
 
+- [3.2.0](#320)
 - [3.1.0](#310)
 - [3.0.1](#301)
 - [3.0.0](#300)
@@ -66,8 +67,25 @@
 - [0.10.0](#0100---20170307)
 - [0.9.9 and prior](#099---20170202)
 
-
 ## Unreleased
+
+### Dependencies
+
+- Bumped lua-resty-session from 4.0.2 to 4.0.3
+  [#10338](https://github.com/Kong/kong/pull/10338)
+
+### Fix
+
+#### Core
+
+- Fix an issue where control plane does not downgrade config for `aws_lambda` and `zipkin` for older version of data planes.
+  [#10346](https://github.com/Kong/kong/pull/10346)
+- Fix an issue where control plane does not rename fields correctly for `session` for older version of data planes.
+  [#10352](https://github.com/Kong/kong/pull/10352)
+- Fix an issue where validation to regex routes may be skipped when the old-fashioned config is used for DB-less Kong.
+  [#10348](https://github.com/Kong/kong/pull/10348)
+
+## 3.2.0
 
 ### Breaking Changes
 
@@ -75,11 +93,22 @@
 
 - **JWT**: JWT plugin now denies a request that has different tokens in the jwt token search locations.
   [#9946](https://github.com/Kong/kong/pull/9946)
+- **Session**: for sessions to work as expected it is required that all nodes run Kong >= 3.2.x.
+  For that reason it is advisable that during upgrades mixed versions of proxy nodes run for
+  as little as possible. During that time, the invalid sessions could cause failures and partial downtime.
+  All existing sessions are invalidated when upgrading to this version.
+  The parameter `idling_timeout` now has a default value of `900`: unless configured differently,
+  sessions expire after 900 seconds (15 minutes) of idling.
+  The parameter `absolute_timeout` has a default value of `86400`: unless configured differently,
+  sessions expire after 86400 seconds (24 hours).
+  [#10199](https://github.com/Kong/kong/pull/10199)
 
 ### Additions
 
 #### Core
 
+- Expose postgres connection pool configuration.
+  [#9603](https://github.com/Kong/kong/pull/9603)
 - When `router_flavor` is `traditional_compatible`, verify routes created using the
   Expression router instead of the traditional router to ensure created routes
   are actually compatible.
@@ -92,6 +121,13 @@
   This config defaults to `10m`.
   Thanks [Michael Kotten](https://github.com/michbeck100) for contributing this change.
   [#10021](https://github.com/Kong/kong/pull/10021)
+
+#### Balancer
+
+- Add a new load-balancing `algorithm` option `latency` to the `Upstream` entity.
+  This algorithm will choose a target based on the response latency of each target
+  from prior requests.
+  [#9787](https://github.com/Kong/kong/pull/9787)
 
 #### Plugins
 
@@ -109,6 +145,24 @@
   [#9962](https://github.com/Kong/kong/pull/9962)
 - **OpenTelemetry**: Support scoping with services, routes and consumers.
   [#10096](https://github.com/Kong/kong/pull/10096)
+- **Statsd**: Add `tag_style` configuration
+  parameter that allows to send metrics with [tags](https://github.com/prometheus/statsd_exporter#tagging-extensions).
+  Defaults to `nil` which means do not add any tags
+  to the metrics.
+  [#10118](https://github.com/Kong/kong/pull/10118)
+- **Session**: now uses lua-resty-session v4.0.0
+  [#10199](https://github.com/Kong/kong/pull/10199)
+
+#### Admin API
+
+- In dbless mode, `/config` API endpoint can now flatten all schema validation
+  errors to a single array via the optional `flatten_errors` query parameter.
+  [#10161](https://github.com/Kong/kong/pull/10161)
+
+#### PDK
+
+- Support for `upstream_status` field in log serializer.
+  [#10296](https://github.com/Kong/kong/pull/10296)
 
 ### Fixes
 
@@ -116,12 +170,13 @@
 
 - Add back Postgres `FLOOR` function when calculating `ttl`, so the returned `ttl` is always a whole integer.
   [#9960](https://github.com/Kong/kong/pull/9960)
-- Expose postgres connection pool configuration
-  [#9603](https://github.com/Kong/kong/pull/9603)
 - Fix an issue where after a valid declarative configuration is loaded,
   the configuration hash is incorrectly set to the value: `00000000000000000000000000000000`.
   [#9911](https://github.com/Kong/kong/pull/9911)
-  [#10046](https://github.com/Kong/kong/pull/10046)
+- Update the batch queues module so that queues no longer grow without bounds if
+  their consumers fail to process the entries.  Instead, old batches are now dropped
+  and an error is logged.
+  [#10247](https://github.com/Kong/kong/pull/10247)
 - Fix an issue where 'X-Kong-Upstream-Status' cannot be emitted when response is buffered.
   [#10056](https://github.com/Kong/kong/pull/10056)
 
@@ -137,15 +192,30 @@
   [#10044](https://github.com/Kong/kong/pull/10044)
 - **OpenTelemetry**: Fix non-compliances to specification:
   - For `http.uri` in spans. The field should be full HTTP URI.
-    [#10036](https://github.com/Kong/kong/pull/10036)
+    [#10069](https://github.com/Kong/kong/pull/10069)
   - For `http.status_code`. It should be present on spans for requests that have a status code.
     [#10160](https://github.com/Kong/kong/pull/10160)
   - For `http.flavor`. It should be a string value, not a double.
     [#10160](https://github.com/Kong/kong/pull/10160)
+- **OpenTelemetry**: Fix a bug that when getting the trace of other formats, the trace ID reported and propagated could be of incorrect length.
+    [#10332](https://github.com/Kong/kong/pull/10332)
 - **OAuth2**: `refresh_token_ttl` is now limited between `0` and `100000000` by schema validator. Previously numbers that are too large causes requests to fail.
   [#10068](https://github.com/Kong/kong/pull/10068)
 
 ### Changed
+
+#### Core
+
+- Improve error message for invalid JWK entities.
+  [#9904](https://github.com/Kong/kong/pull/9904)
+- Renamed two configuration properties:
+    * `opentelemetry_tracing` => `tracing_instrumentations`
+    * `opentelemetry_tracing_sampling_rate` => `tracing_sampling_rate`
+
+  The old `opentelemetry_*` properties are considered deprecated and will be
+  fully removed in a future version of Kong.
+  [#10122](https://github.com/Kong/kong/pull/10122)
+  [#10220](https://github.com/Kong/kong/pull/10220)
 
 #### Hybrid Mode
 
@@ -157,12 +227,23 @@
 
 - Bumped luarocks from 3.9.1 to 3.9.2
   [#9942](https://github.com/Kong/kong/pull/9942)
-- Bumped atc-router from 1.0.1 to 1.0.4
+- Bumped atc-router from 1.0.1 to 1.0.5
   [#9925](https://github.com/Kong/kong/pull/9925)
   [#10143](https://github.com/Kong/kong/pull/10143)
+  [#10208](https://github.com/Kong/kong/pull/10208)
 - Bumped lua-resty-openssl from 0.8.15 to 0.8.17
   [#9583](https://github.com/Kong/kong/pull/9583)
   [#10144](https://github.com/Kong/kong/pull/10144)
+- Bumped lua-kong-nginx-module from 0.5.0 to 0.5.1
+  [#10181](https://github.com/Kong/kong/pull/10181)
+- Bumped lua-resty-session from 3.10 to 4.0.2
+  [#10199](https://github.com/Kong/kong/pull/10199)
+  [#10230](https://github.com/Kong/kong/pull/10230)
+  [#10308](https://github.com/Kong/kong/pull/10308)
+- Bumped OpenSSL from 1.1.1s to 1.1.1t
+  [#10266](https://github.com/Kong/kong/pull/10266)
+- Bumped lua-resty-timer-ng from 0.2.0 to 0.2.3
+  [#10265](https://github.com/Kong/kong/pull/10265)
 
 
 ## 3.1.0
@@ -7754,6 +7835,7 @@ First version running with Cassandra.
 
 [Back to TOC](#table-of-contents)
 
+[3.2.0]: https://github.com/Kong/kong/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/Kong/kong/compare/3.0.1...3.1.0
 [3.0.1]: https://github.com/Kong/kong/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/Kong/kong/compare/2.8.1...3.0.0

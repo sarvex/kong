@@ -184,13 +184,6 @@ CONFIGURE_OPTIONS = [
     ],
     "//conditions:default": [],
 }) + select({
-    "@kong//:wasmx_v8": [
-        "--with-cc-opt=\"-I$$EXT_BUILD_ROOT$$/external/v8/include\"",
-        "--with-ld-opt=\"-L$$EXT_BUILD_ROOT$$/external/v8/lib\"",
-        "--with-ld-opt=\"-Wl,-rpath,$$EXT_BUILD_ROOT$$/external/v8/lib\"",
-    ],
-    "//conditions:default": [],
-}) + select({
     "@kong//:wasmx_wasmer": [
         "--with-cc-opt=\"-I$$EXT_BUILD_ROOT$$/external/wasmer/include\"",
         "--with-ld-opt=\"-L$$EXT_BUILD_ROOT$$/external/wasmer/lib\"",
@@ -224,7 +217,6 @@ configure_make(
         "@lua-resty-events//:all_srcs",
         "@openresty_binding//:all_srcs",
         "@ngx_wasm_module//:all_srcs",
-        "@v8//:all_srcs",
         "@wasmer//:all_srcs",
         "@wasmtime//:all_srcs",
     ],
@@ -232,9 +224,6 @@ configure_make(
     configure_in_place = True,
     configure_options = CONFIGURE_OPTIONS,
     env = select({
-        "@kong//:wasmx_v8": {
-            "NGX_WASM_RUNTIME": "v8",
-        },
         "@kong//:wasmx_wasmer": {
             "NGX_WASM_RUNTIME": "wasmer",
         },

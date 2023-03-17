@@ -171,18 +171,9 @@ string_flag(
     name = "wasm_runtime",
     build_setting_default = "wasmer",
     values = [
-        "v8",
         "wasmer",
         "wasmtime",
     ],
-)
-
-config_setting(
-    name = "wasmx_v8",
-    flag_values = {
-        ":wasm_runtime": "v8",
-    },
-    visibility = ["//visibility:public"],
 )
 
 config_setting(

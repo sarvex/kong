@@ -9,13 +9,10 @@ def wasmx_repositories():
     ngx_wasm_module_branch = KONG_VAR["NGX_WASM_MODULE_BRANCH"]
     wasmtime_version = KONG_VAR["WASMTIME_VERSION"]
     wasmer_version = KONG_VAR["WASMER_VERSION"]
-    v8_version = KONG_VAR["V8_VERSION"]
     wasmtime_os = KONG_VAR["WASMTIME_OS"]
     wasmer_os = KONG_VAR["WASMER_OS"]
-    v8_os = KONG_VAR["V8_OS"]
     wasmtime_arch = KONG_VAR["WASMTIME_ARCH"]
     wasmer_arch = KONG_VAR["WASMER_ARCH"]
-    v8_arch = KONG_VAR["V8_ARCH"]
 
     maybe(
         new_git_repository,
@@ -38,23 +35,6 @@ filegroup(
 filegroup(
     name = "v8bridge_srcs",
     srcs = glob(["lib/v8bridge/**"]),
-    visibility = ["//visibility:public"]
-)
-""",
-    )
-
-    maybe(
-        http_archive,
-        name = "v8",
-        urls = [
-            "https://github.com/Kong/ngx_wasm_runtimes/releases/download/latest/ngx_wasm_runtime-v8-" +
-            v8_version + "-" + v8_os + "-" + v8_arch + ".tar.gz",
-        ],
-        strip_prefix = "v8-" + v8_version + "-" + v8_os + "-" + v8_arch,
-        build_file_content = """
-filegroup(
-    name = "all_srcs",
-    srcs = glob(["include/**", "lib/**"]),
     visibility = ["//visibility:public"]
 )
 """,

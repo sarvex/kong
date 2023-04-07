@@ -60,7 +60,7 @@ ifndef BAZEL
 endif
 
 build-kong: check-bazel
-	$(BAZEL) build //build:kong --verbose_failures --action_env=BUILD_NAME=$(BUILD_NAME)
+	$(BAZEL) build //build:kong --//:wasmx=true --verbose_failures --action_env=BUILD_NAME=$(BUILD_NAME)
 
 build-venv: check-bazel
 	$(eval VENV := bazel-bin/build/$(BUILD_NAME)-venv.sh)

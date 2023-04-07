@@ -47,7 +47,7 @@
 - Request and response buffering options are now enabled for incoming HTTP 2.0 requests too.
   Thanks [@PidgeyBE](https://github.com/PidgeyBE) for contributing this change.
   [#10595](https://github.com/Kong/kong/pull/10595)
-  [#10204](https://github.com/Kong/kong/pull/10204)  
+  [#10204](https://github.com/Kong/kong/pull/10204)
 - Add `KONG_UPSTREAM_DNS_TIME` to `kong.ctx` so that we can record the time it takes for DNS
   resolution when Kong proxies to upstream.
   [#10355](https://github.com/Kong/kong/pull/10355)
@@ -170,7 +170,8 @@
   [#10663](https://github.com/Kong/kong/pull/10663)
 - **gRPC gateway**: `null` in the JSON payload caused an uncaught exception to be thrown during pb.encode.
   [#10687](https://github.com/Kong/kong/pull/10687)
-
+- **Oauth2**: prevent an authorization code created by one plugin instance to be exchanged for an access token by a different plugin instance.
+  [#10011](https://github.com/Kong/kong/pull/10011)
 
 #### PDK
 

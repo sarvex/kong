@@ -29,11 +29,11 @@ describe("#wasm filter execution (#" .. strategy .. ")", function()
     local bp, db = helpers.get_db_utils("postgres", {
       "routes",
       "services",
-      "wasm_filter_chains",
+      "filter_chains",
     })
 
 
-    db.wasm_filter_chains:load_filters({
+    db.filter_chains:load_filters({
       { name = "tests" },
       { name = "response_transformer" },
     })
@@ -56,7 +56,7 @@ describe("#wasm filter execution (#" .. strategy .. ")", function()
     end
 
     local function create_filter_chain(entity)
-      return assert(bp.wasm_filter_chains:insert(entity))
+      return assert(bp.filter_chains:insert(entity))
     end
 
 

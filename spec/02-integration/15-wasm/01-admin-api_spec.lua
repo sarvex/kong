@@ -15,7 +15,7 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
     _, db = helpers.get_db_utils(strategy, {
       "routes",
       "services",
-      "wasm_filter_chains",
+      "filter_chains",
     })
 
     service = assert(db.services:insert {
@@ -51,7 +51,7 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
 
 
   local function reset_db()
-    db.wasm_filter_chains:truncate()
+    db.filter_chains:truncate()
   end
 
 
@@ -76,12 +76,12 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
   end
 
 
-  describe("/wasm/filter-chains", function()
+  describe("/filter-chains", function()
     before_each(reset_db)
 
     describe("POST", function()
       it("creates a filter chain", function()
-        local res = admin:post("/wasm/filter-chains", {
+        local res = admin:post("/filter-chains", {
           headers = { ["Content-Type"] = "application/json" },
           body = {
             filters = { { name = "tests" } },
@@ -102,13 +102,13 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
 
     describe("GET", function()
       it("returns a collection of filter chains", function()
-        local res = admin:get("/wasm/filter-chains")
+        local res = admin:get("/filter-chains")
         assert.response(res).has.status(200)
 
         local body = assert.response(res).has.jsonbody()
         assert.same({ data = {}, next = ngx.null }, body)
 
-        res = admin:post("/wasm/filter-chains", json {
+        res = admin:post("/filter-chains", json {
           filters = { { name = "tests" } },
           service = { id = service.id },
           tags = { "a" },
@@ -117,7 +117,7 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
         assert.response(res).has.status(201)
         local chain = assert.response(res).has.jsonbody()
 
-        res = admin:get("/wasm/filter-chains")
+        res = admin:get("/filter-chains")
         assert.response(res).has.status(200)
 
         body = assert.response(res).has.jsonbody()
@@ -125,14 +125,14 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
         assert.same(chain, body.data[1])
 
         assert.response(
-          admin:post("/wasm/filter-chains", json {
+          admin:post("/filter-chains", json {
             filters = { { name = "tests" } },
             route = { id = route.id },
             tags = { "b" },
           })
         ).has.status(201)
 
-        res = admin:get("/wasm/filter-chains")
+        res = admin:get("/filter-chains")
         assert.response(res).has.status(200)
 
         body = assert.response(res).has.jsonbody()
@@ -140,21 +140,21 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
       end)
     end)
 
-    unsupported("PATCH",  "/wasm/filter-chains")
-    unsupported("PUT",    "/wasm/filter-chains")
-    unsupported("DELETE", "/wasm/filter-chains")
+    unsupported("PATCH",  "/filter-chains")
+    unsupported("PUT",    "/filter-chains")
+    unsupported("DELETE", "/filter-chains")
   end)
 
   for _, key in ipairs({ "id", "name" }) do
 
-  describe("/wasm/filter-chains/:" .. key, function()
+  describe("/filter-chains/:" .. key, function()
     describe("GET", function()
       local chain
 
       lazy_setup(function()
         reset_db()
 
-        local res = admin:post("/wasm/filter-chains", json {
+        local res = admin:post("/filter-chains", json {
           name = "wasm-endpoint-test",
           filters = { { name = "tests" } },
           service = { id = service.id },
@@ -167,7 +167,7 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
       lazy_teardown(reset_db)
 
       it("fetches a filter chain", function()
-        local res = admin:get("/wasm/filter-chains/" .. chain[key])
+        local res = admin:get("/filter-chains/" .. chain[key])
         assert.response(res).has.status(200)
         local got = assert.response(res).has.jsonbody()
         assert.same(chain, got)
@@ -175,7 +175,7 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
 
       it("returns 404 if not found", function()
         assert.response(
-          admin:get("/wasm/filter-chains/" .. utils.uuid())
+          admin:get("/filter-chains/" .. utils.uuid())
         ).has.status(404)
       end)
     end)
@@ -186,7 +186,7 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
       lazy_setup(function()
         reset_db()
 
-        local res = admin:post("/wasm/filter-chains", json {
+        local res = admin:post("/filter-chains", json {
           name = "wasm-endpoint-test",
           filters = { { name = "tests" } },
           service = { id = service.id },
@@ -202,7 +202,7 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
         assert.equals(ngx.null, chain.tags)
         assert.is_true(chain.enabled)
 
-        local res = admin:patch("/wasm/filter-chains/" .. chain[key], json {
+        local res = admin:patch("/filter-chains/" .. chain[key], json {
           tags = { "foo", "bar" },
           enabled = false,
           filters = {
@@ -230,7 +230,7 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
 
       local chain
       before_each(function()
-        local res = admin:post("/wasm/filter-chains", json {
+        local res = admin:post("/filter-chains", json {
           name = "wasm-endpoint-test",
           filters = { { name = "tests" } },
           service = { id = service.id },
@@ -240,23 +240,23 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
         chain = assert.response(res).has.jsonbody()
 
         assert.response(
-          admin:get("/wasm/filter-chains/" .. chain[key])
+          admin:get("/filter-chains/" .. chain[key])
         ).has.status(200)
       end)
 
 
       it("removes a filter chain", function()
-        local res = admin:delete("/wasm/filter-chains/" .. chain[key])
+        local res = admin:delete("/filter-chains/" .. chain[key])
         assert.response(res).has.status(204)
 
         assert.response(
-          admin:get("/wasm/filter-chains/" .. chain[key])
+          admin:get("/filter-chains/" .. chain[key])
         ).has.status(404)
       end)
 
     end)
 
-    unsupported("POST", "/wasm/filter-chains/" .. utils.uuid())
+    unsupported("POST", "/filter-chains/" .. utils.uuid())
   end)
 
   end -- each { "id", "name" }

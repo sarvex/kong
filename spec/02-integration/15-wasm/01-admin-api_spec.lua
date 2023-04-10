@@ -145,16 +145,17 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
     unsupported("DELETE", "/wasm/filter-chains")
   end)
 
-  describe("/wasm/filter-chains/:chain", function()
+  for _, key in ipairs({ "id", "name" }) do
+
+  describe("/wasm/filter-chains/:" .. key, function()
     describe("GET", function()
-      local id, chain
+      local chain
 
       lazy_setup(function()
         reset_db()
 
-        id = utils.uuid()
         local res = admin:post("/wasm/filter-chains", json {
-          id = id,
+          name = "wasm-endpoint-test",
           filters = { { name = "tests" } },
           service = { id = service.id },
         })
@@ -165,8 +166,8 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
 
       lazy_teardown(reset_db)
 
-      it("fetches a filter chain by ID", function()
-        local res = admin:get("/wasm/filter-chains/" .. id)
+      it("fetches a filter chain", function()
+        local res = admin:get("/wasm/filter-chains/" .. chain[key])
         assert.response(res).has.status(200)
         local got = assert.response(res).has.jsonbody()
         assert.same(chain, got)
@@ -180,14 +181,13 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
     end)
 
     describe("PATCH", function()
-      local id, chain
+      local chain
 
       lazy_setup(function()
         reset_db()
 
-        id = utils.uuid()
         local res = admin:post("/wasm/filter-chains", json {
-          id = id,
+          name = "wasm-endpoint-test",
           filters = { { name = "tests" } },
           service = { id = service.id },
         })
@@ -202,7 +202,7 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
         assert.equals(ngx.null, chain.tags)
         assert.is_true(chain.enabled)
 
-        local res = admin:patch("/wasm/filter-chains/" .. id, json {
+        local res = admin:patch("/wasm/filter-chains/" .. chain[key], json {
           tags = { "foo", "bar" },
           enabled = false,
           filters = {
@@ -228,28 +228,29 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
       lazy_setup(reset_db)
       lazy_teardown(reset_db)
 
-      local id
+      local chain
       before_each(function()
-        id = utils.uuid()
-
-        assert.response(admin:post("/wasm/filter-chains", json {
-          id = id,
+        local res = admin:post("/wasm/filter-chains", json {
+          name = "wasm-endpoint-test",
           filters = { { name = "tests" } },
           service = { id = service.id },
-        })).has.status(201)
+        })
+
+        assert.response(res).has.status(201)
+        chain = assert.response(res).has.jsonbody()
 
         assert.response(
-          admin:get("/wasm/filter-chains/" .. id)
+          admin:get("/wasm/filter-chains/" .. chain[key])
         ).has.status(200)
       end)
 
 
-      it("removes a filter chain by ID", function()
-        local res = admin:delete("/wasm/filter-chains/" .. id)
+      it("removes a filter chain", function()
+        local res = admin:delete("/wasm/filter-chains/" .. chain[key])
         assert.response(res).has.status(204)
 
         assert.response(
-          admin:get("/wasm/filter-chains/" .. id)
+          admin:get("/wasm/filter-chains/" .. chain[key])
         ).has.status(404)
       end)
 
@@ -257,6 +258,8 @@ describe("WASMX admin API [#" .. strategy .. "]", function()
 
     unsupported("POST", "/wasm/filter-chains/" .. utils.uuid())
   end)
+
+  end -- each { "id", "name" }
 end)
 
 end -- each strategy

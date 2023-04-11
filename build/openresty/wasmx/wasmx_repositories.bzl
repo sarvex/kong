@@ -57,6 +57,12 @@ filegroup(
     srcs = glob(["include/**", "lib/**"]),
     visibility = ["//visibility:public"]
 )
+
+filegroup(
+    name = "lib",
+    srcs = glob(["**/*.so"]),
+    visibility = ["//visibility:public"]
+)
 """,
     )
 
@@ -71,6 +77,12 @@ filegroup(
 filegroup(
     name = "all_srcs",
     srcs = glob(["include/**", "lib/**"]),
+    visibility = ["//visibility:public"]
+)
+
+filegroup(
+    name = "lib",
+    srcs = glob(["**/*.so"]),
     visibility = ["//visibility:public"]
 )
 """,
@@ -88,6 +100,12 @@ filegroup(
 filegroup(
     name = "all_srcs",
     srcs = glob(["include/**", "lib/**"]),
+    visibility = ["//visibility:public"]
+)
+
+filegroup(
+    name = "lib",
+    srcs = glob(["**/*.so"]),
     visibility = ["//visibility:public"]
 )
 """,

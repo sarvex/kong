@@ -12,12 +12,7 @@ return {
           "filters"     JSONB[],
           "tags"        TEXT[],
           "created_at"  TIMESTAMP WITH TIME ZONE,
-          "updated_at"  TIMESTAMP WITH TIME ZONE,
-
-          -- service and route are mutually exclusive
-          CONSTRAINT "filter_chains_scope_ck"
-            CHECK ((route_id IS NULL     AND service_id IS NOT NULL)
-                OR (route_id IS NOT NULL AND service_id IS NULL))
+          "updated_at"  TIMESTAMP WITH TIME ZONE
         );
 
         DO $$

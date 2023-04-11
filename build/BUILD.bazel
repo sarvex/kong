@@ -49,7 +49,6 @@ wasmx_vm_deps = select({
     "//conditions:default": [],
 })
 
-
 wasmx_deps = select({
     "@kong//:wasmx_flag": [
         "@ngx_wasm_module//:lua_libs",
@@ -88,7 +87,6 @@ wasmx_vm_cmd = select({
 """,
     "//conditions:default": "",
 })
-
 
 
 kong_directory_genrule(

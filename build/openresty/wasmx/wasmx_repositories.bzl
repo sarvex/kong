@@ -82,7 +82,7 @@ filegroup(
 
 filegroup(
     name = "lib",
-    srcs = glob(["lib/**"]),
+    srcs = glob(["lib/*.so"]),
     visibility = ["//visibility:public"]
 )
 """,
@@ -105,7 +105,7 @@ filegroup(
 
 filegroup(
     name = "lib",
-    srcs = glob(["lib/**"]),
+    srcs = glob(["lib/*.so"]),
     visibility = ["//visibility:public"]
 )
 """,

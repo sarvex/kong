@@ -1295,8 +1295,8 @@ local function check_and_parse(conf, opts)
     errors[#errors + 1] = "node_id must be a valid UUID"
   end
 
-  if conf.wasm_modules then
-    for _, path in ipairs(conf.wasm_modules) do
+  if conf.wasm_filters_path then
+    for _, path in ipairs(conf.wasm_filters_path) do
       local extension = pl_path.extension(path)
 
       if not pl_path.isfile(path)

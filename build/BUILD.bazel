@@ -81,7 +81,7 @@ wasmx_vm_cmd = select({
         cp -va "$fname" "${BUILD_DESTDIR}/kong/lib"
     done
 """,
-    "@kong//:wasmx_wasmtime": """,
+    "@kong//:wasmx_wasmtime": """
     for fname in $(locations @wasmtime//:lib); do
         cp -va "$fname" "${BUILD_DESTDIR}/kong/lib"
     done

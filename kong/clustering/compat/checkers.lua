@@ -1,4 +1,5 @@
 local ipairs = ipairs
+local type = type
 
 
 local log_warn_message
@@ -99,6 +100,19 @@ local compatible_checkers = {
               has_update = true
             else
               config.batch_flush_delay = 3
+              has_update = true
+            end
+          end
+        end
+      end
+
+      for _, config_entity in ipairs(config_table.vaults or {}) do
+        if config_entity.name == "env" then
+          local config = config_entity.config
+          if type(config) == "table" then
+            local prefix = config.prefix
+            if type(prefix) == "string" then
+              config.prefix = prefix:gsub("-", "_")
               has_update = true
             end
           end

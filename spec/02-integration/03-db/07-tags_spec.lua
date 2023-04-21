@@ -342,7 +342,7 @@ for _, strategy in helpers.each_strategy() do
           assert.stub(ngx.log).was_not_called()
         end)
 
-        it("#flaky and returns as normal if page size is large enough", function()
+        it("and returns as normal if page size is large enough", function()
           stub(ngx, "log")
 
           local rows, err, err_t, offset = db.services:page(enough_page_size, nil,

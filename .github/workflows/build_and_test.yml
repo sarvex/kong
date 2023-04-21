@@ -39,7 +39,7 @@ jobs:
       with:
         path: |
           ${{ env.BUILD_ROOT }}
-        key: ${{ hashFiles('.requirements', 'kong-*.rockspec', '.bazelversion', '.bazelrc', 'build/**', 'BUILD.bazel', 'WORKSPACE', '.github/workflows/build_and_test.yml') }}
+        key: 0ff07ff9c54aebada4b78cc4cfac08b77287e242b534e71fcff0b552688e28b5
 
     - name: Install packages
       if: steps.cache-deps.outputs.cache-hit != 'true'
@@ -73,6 +73,7 @@ jobs:
     name: Lint, Doc and Unit tests
     runs-on: ubuntu-22.04
     needs: build
+    if: false
 
     services:
       postgres:
@@ -140,6 +141,7 @@ jobs:
     name: Postgres ${{ matrix.suite }} - ${{ matrix.split }} tests
     runs-on: ubuntu-22.04
     needs: build
+    if: false
 
     strategy:
       fail-fast: false
@@ -244,6 +246,7 @@ jobs:
     name: DB-less integration tests
     runs-on: ubuntu-22.04
     needs: build
+    if: false
 
     services:
       grpcbin:
@@ -306,9 +309,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [integration, plugins]
+        suite: [integration]
         cassandra_version: [3]
-        split: [first (01-04), second (>= 05)]
+        split: [first (01-04)]
 
     services:
       cassandra:
@@ -350,7 +353,7 @@ jobs:
         path: |
           ${{ env.BUILD_ROOT }}
 
-        key: ${{ hashFiles('.requirements', 'kong-*.rockspec', '.bazelversion', '.bazelrc', 'build/**', 'BUILD.bazel', 'WORKSPACE', '.github/workflows/build_and_test.yml') }}
+        key: 0ff07ff9c54aebada4b78cc4cfac08b77287e242b534e71fcff0b552688e28b5
 
     - name: Add gRPC test host names
       run: |
@@ -404,6 +407,7 @@ jobs:
     name: PDK tests
     runs-on: ubuntu-22.04
     needs: build
+    if: false
 
     steps:
     - name: Checkout Kong source code

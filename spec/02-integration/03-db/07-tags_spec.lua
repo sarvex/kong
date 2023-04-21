@@ -347,6 +347,7 @@ for _, strategy in helpers.each_strategy() do
 
           local rows, err, err_t, offset = db.services:page(enough_page_size, nil,
           { tags = { "paging", "team_paging_1" }, tags_cond = 'and' })
+          print(require("inspect")(rows))
           assert(is_valid_page(rows, err, err_t))
           assert.equal(enough_page_size, #rows)
           if offset then

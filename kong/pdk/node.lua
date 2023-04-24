@@ -124,7 +124,7 @@ local function new(self)
   --       pid = 18005
   --     }
   --   },
-  --   -- if the `kong` use dbless mode, the following will be present:
+  --   -- if the `kong` uses dbless mode, the following will be present:
   --  lmdb = {
   --    max_map_size: 128.00 MiB",
   --    map_size: "128.00 MiB",

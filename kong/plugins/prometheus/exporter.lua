@@ -142,7 +142,7 @@ local function init()
                                                      prometheus.LOCAL_STORAGE)
 
   if kong.configuration.database == "off" then
-    memory_stats.lmdb = prometheus:gauge("memory_lua_lmdb_bytes",
+    memory_stats.lmdb = prometheus:gauge("memory_lmdb_used_bytes",
                                          "Allocated bytes in LMDB",
                                          {"node_id", "kong_subsystem"},
                                          prometheus.LOCAL_STORAGE)

@@ -2354,7 +2354,7 @@ describe("Plugin: statsd (log) #off", function()
       }
     })
 
-    local body = assert.res_status(201, res)
+    assert.res_status(201, res)
     admin_client:close()
     local shdict_count = #get_shdicts()
 

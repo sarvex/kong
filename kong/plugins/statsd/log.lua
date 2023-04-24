@@ -301,7 +301,7 @@ if ngx.config.ngx_lua_version >= 10011 then
           ["node"] = hostname,
         }
         logger:send_statsd("lmdb.used_space",
-          lmdb_info.used_pages * lmdb_info.page_size, logger.stat_types.gauge,
+          lmdb_info.last_used_pages * lmdb_info.page_size, logger.stat_types.gauge,
           metric_config.sample_rate, tags, conf.tag_style)
         logger:send_statsd("lmdb.capacity",
           lmdb_info.map_size, logger.stat_types.gauge,
@@ -309,7 +309,7 @@ if ngx.config.ngx_lua_version >= 10011 then
       else
         if conf.hostname_in_prefix then
           logger:send_statsd("lmdb.used_space",
-            lmdb_info.used_pages * lmdb_info.page_size, logger.stat_types.gauge,
+            lmdb_info.last_used_pages * lmdb_info.page_size, logger.stat_types.gauge,
             metric_config.sample_rate)
           logger:send_statsd("lmdb.capacity",
             lmdb_info.map_size, logger.stat_types.gauge,
@@ -317,7 +317,7 @@ if ngx.config.ngx_lua_version >= 10011 then
 
         else
           logger:send_statsd(string_format("node.%s.lmdb.used_space", hostname),
-            lmdb_info.used_pages * lmdb_info.page_size, logger.stat_types.gauge,
+            lmdb_info.last_used_pages * lmdb_info.page_size, logger.stat_types.gauge,
             metric_config.sample_rate)
           logger:send_statsd(string_format("node.%s.lmdb.capacity", hostname),
             lmdb_info.map_size, logger.stat_types.gauge,

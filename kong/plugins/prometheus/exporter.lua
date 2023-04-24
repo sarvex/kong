@@ -144,11 +144,11 @@ local function init()
   if kong.configuration.database == "off" then
     memory_stats.lmdb = prometheus:gauge("memory_lmdb_used_bytes",
                                          "Used bytes in LMDB",
-                                         {"node_id", "kong_subsystem"},
+                                         {"node_id"},
                                          prometheus.LOCAL_STORAGE)
     memory_stats.lmdb_capacity = prometheus:gauge("memory_lmdb_total_bytes",
                                                   "Total capacity in bytes of LMDB",
-                                                  {"node_id", "kong_subsystem"},
+                                                  {"node_id"},
                                                   prometheus.LOCAL_STORAGE)
   end
 
@@ -458,8 +458,8 @@ local function metric_data(write_fn)
   end
 
   if kong.configuration.database == "off" then
-    metrics.memory_stats.lmdb_capacity:set(res.lmdb.map_size, { node_id, kong_subsystem })
-    metrics.memory_stats.lmdb:set(res.lmdb.used_size, { node_id, kong_subsystem })
+    metrics.memory_stats.lmdb_capacity:set(res.lmdb.map_size, { node_id })
+    metrics.memory_stats.lmdb:set(res.lmdb.used_size, { node_id })
   end
 
   -- Hybrid mode status

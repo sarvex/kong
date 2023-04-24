@@ -163,14 +163,12 @@ local function new(self)
   --   }
   --   -- if the `kong` use dbless mode, the following will be present:
   --  lmdb = {
-  --    max_map_size: "131072 KB",
   --    map_size: "131072 KB",
   --    used_size": "20.48 KB",
   --    used_pages": 6,
-  --    max_pages": 32768,
   --    last_txnid": 2,
   --    max_readers": 126,
-  --    num_readers": 16
+  --    current_readers": 16
   --   },
   -- }
   function _NODE.get_memory_stats(unit, scale)
@@ -261,11 +259,14 @@ local function new(self)
         res.lmdb.err = "could not get kong lmdb status: " .. err
 
       else
-        lmdb_info.max_map_size = convert_bytes(lmdb_info.max_map_size, unit, scale)
-        lmdb_info.map_size = convert_bytes(lmdb_info.map_size, unit, scale)
-        lmdb_info.used_size = convert_bytes(lmdb_info.used_pages * lmdb_info.page_size, unit, scale)
-        lmdb_info.page_size = nil
-        res.lmdb = lmdb_info
+        local info = {}
+        info.map_size = convert_bytes(lmdb_info.map_size, unit, scale)
+        info.used_size = convert_bytes(lmdb_info.used_pages * lmdb_info.page_size, unit, scale)
+        info.used_pages = lmdb_info.used_pages
+        info.last_txnid = lmdb_info.last_txnid
+        info.max_readers = lmdb_info.max_readers
+        info.current_readers = lmdb_info.num_readers
+        res.lmdb = info
       end
     end
 

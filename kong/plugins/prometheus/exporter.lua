@@ -146,7 +146,7 @@ local function init()
                                          "Used bytes in LMDB",
                                          {"node_id", "kong_subsystem"},
                                          prometheus.LOCAL_STORAGE)
-    memory_stats.lmdb_capacity = prometheus:gauge("memory_lua_lmdb_total_bytes",
+    memory_stats.lmdb_capacity = prometheus:gauge("memory_lmdb_total_bytes",
                                                   "Total capacity in bytes of LMDB",
                                                   {"node_id", "kong_subsystem"},
                                                   prometheus.LOCAL_STORAGE)

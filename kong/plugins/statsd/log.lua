@@ -16,7 +16,7 @@ local ipairs = ipairs
 local tonumber = tonumber
 local knode = kong and kong.node or require "kong.pdk.node".new()
 local null = ngx.null
-local lmdb_info = lmdb.get_env_info
+local get_env_info = lmdb.get_env_info
 
 local START_RANGE_IDX = 1
 local END_RANGE_IDX   = 2
@@ -291,7 +291,7 @@ if ngx.config.ngx_lua_version >= 10011 then
     local now = ngx_time()
     if lmdb_metrics_last_sent + LMDB_METRICS_SEND_THRESHOLD < now then
       lmdb_metrics_last_sent = now
-      local lmdb_info, err = lmdb_info()
+      local lmdb_info, err = get_env_info()
       if err then
         kong.log.err("failed to get lmdb info: ", err)
         return

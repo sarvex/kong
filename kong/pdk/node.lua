@@ -19,7 +19,7 @@ local shared = ngx.shared
 local C             = ffi.C
 local ffi_new       = ffi.new
 local ffi_str       = ffi.string
-local lmdb_info     = lmdb.get_env_info
+local get_lmdb_info = lmdb.get_env_info
 
 local NODE_ID_KEY = "kong:node_id"
 
@@ -126,14 +126,12 @@ local function new(self)
   --   },
   --   -- if the `kong` uses dbless mode, the following will be present:
   --  lmdb = {
-  --    max_map_size: 128.00 MiB",
   --    map_size: "128.00 MiB",
   --    used_size": "0.02 MiB",
-  --    used_pages": 6,
-  --    max_pages": 32768,
+  --    last_used_page": 6,
   --    last_txnid": 2,
   --    max_readers": 126,
-  --    num_readers": 16
+  --    current_readers": 16
   --   },
   --}
   -- }
@@ -253,7 +251,7 @@ local function new(self)
     end
 
     if kong and kong.configuration and kong.configuration.database == "off" then
-      local lmdb_info, err = lmdb_info()
+      local lmdb_info, err = get_lmdb_info()
       if err then
         res.lmdb = self.table.new(0, 1)
         res.lmdb.err = "could not get kong lmdb status: " .. err

@@ -165,7 +165,7 @@ local function new(self)
   --  lmdb = {
   --    map_size: "131072 KB",
   --    used_size": "20.48 KB",
-  --    last_used_pages": 6,
+  --    last_used_page": 6,
   --    last_txnid": 2,
   --    max_readers": 126,
   --    current_readers": 16
@@ -261,8 +261,8 @@ local function new(self)
       else
         local info = {}
         info.map_size = convert_bytes(lmdb_info.map_size, unit, scale)
-        info.used_size = convert_bytes(lmdb_info.last_used_pages * lmdb_info.page_size, unit, scale)
-        info.last_used_pages = lmdb_info.last_used_pages
+        info.used_size = convert_bytes(lmdb_info.last_used_page * lmdb_info.page_size, unit, scale)
+        info.last_used_page = lmdb_info.last_used_page
         info.last_txnid = lmdb_info.last_txnid
         info.max_readers = lmdb_info.max_readers
         info.current_readers = lmdb_info.num_readers

@@ -257,7 +257,7 @@ local function new(self)
         res.lmdb.err = "could not get kong lmdb status: " .. err
 
       else
-        local info = self.table.new(0, 6),
+        local info = self.table.new(0, 6)
         info.map_size = convert_bytes(lmdb_info.map_size, unit, scale)
         info.used_size = convert_bytes(lmdb_info.last_used_page * lmdb_info.page_size, unit, scale)
         info.last_used_page = lmdb_info.last_used_page

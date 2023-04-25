@@ -138,6 +138,8 @@
   [#10680](https://github.com/Kong/kong/pull/10680)
 - Tracing: fix an approximation issue that resulted in reduced precision of the balancer span start and end times.
   [#10681](https://github.com/Kong/kong/pull/10681)
+- Fix protocol detection of default values.
+  [#10736](https://github.com/Kong/kong/pull/10736)
 
 #### Admin API
 

@@ -1103,6 +1103,14 @@ function DAO:each(size, options)
 end
 
 
+-- allow custom validations
+-- return true if valid, or nil/false + err(string) + err_t(table)
+-- stub implementation
+function DAO:validate(entity, options)
+  return true
+end
+
+
 function DAO:insert(entity, options)
   validate_entity_type(entity)
 
@@ -1112,6 +1120,11 @@ function DAO:insert(entity, options)
 
   local entity_to_insert, err, err_t = check_insert(self, entity, options)
   if not entity_to_insert then
+    return nil, err, err_t
+  end
+
+  local validate_ok, err, err_t = self:validate(entity_to_insert, options)
+  if not validate_ok then
     return nil, err, err_t
   end
 
@@ -1164,6 +1177,11 @@ function DAO:update(primary_key, entity, options)
     return nil, err, err_t
   end
 
+  local validate_ok, err, err_t = self:validate(entity_to_update, options)
+  if not validate_ok then
+    return nil, err, err_t
+  end
+
   local ok, err_t = run_hook("dao:update:pre",
                              entity_to_update,
                              self.schema.name,
@@ -1213,6 +1231,11 @@ function DAO:upsert(primary_key, entity, options)
                                                                 entity,
                                                                 options)
   if not entity_to_upsert then
+    return nil, err, err_t
+  end
+
+  local validate_ok, err, err_t = self:validate(entity_to_upsert, options)
+  if not validate_ok then
     return nil, err, err_t
   end
 

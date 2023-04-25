@@ -19,7 +19,7 @@ local shared = ngx.shared
 local C             = ffi.C
 local ffi_new       = ffi.new
 local ffi_str       = ffi.string
-local get_lmdb_info = lmdb.get_env_info
+local lmdb_get_env_info = lmdb.get_env_info
 
 local NODE_ID_KEY = "kong:node_id"
 
@@ -251,7 +251,7 @@ local function new(self)
     end
 
     if kong and kong.configuration and kong.configuration.database == "off" then
-      local lmdb_info, err = get_lmdb_info()
+      local lmdb_info, err = lmdb_get_env_info()
       if err then
         res.lmdb = self.table.new(0, 1)
         res.lmdb.err = "could not get kong lmdb status: " .. err

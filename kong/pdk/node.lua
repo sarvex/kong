@@ -127,11 +127,11 @@ local function new(self)
   --   -- if the `kong` uses dbless mode, the following will be present:
   --  lmdb = {
   --    map_size: "128.00 MiB",
-  --    used_size": "0.02 MiB",
+  --    used_size: "0.02 MiB",
   --    last_used_page": 6,
-  --    last_txnid": 2,
-  --    max_readers": 126,
-  --    current_readers": 16
+  --    last_txnid: 2,
+  --    max_readers: 126,
+  --    current_readers: 16
   --   },
   --}
   -- }

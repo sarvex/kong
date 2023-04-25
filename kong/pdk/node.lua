@@ -162,11 +162,11 @@ local function new(self)
   --   -- if the `kong` use dbless mode, the following will be present:
   --  lmdb = {
   --    map_size: "131072 KB",
-  --    used_size": "20.48 KB",
-  --    last_used_page": 6,
-  --    last_txnid": 2,
-  --    max_readers": 126,
-  --    current_readers": 16
+  --    used_size: "20.48 KB",
+  --    last_used_page: 6,
+  --    last_txnid: 2,
+  --    max_readers: 126,
+  --    current_readers: 16
   --   },
   -- }
   function _NODE.get_memory_stats(unit, scale)

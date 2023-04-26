@@ -249,7 +249,7 @@ end
 local function remove_field_array_value(config, remove_val, has_update)
   if config then
     local iterate_table = config
-    for i, v in pairs(iterate_table) do
+    for i, v in ipairs(iterate_table) do
       if v == remove_val then
         table_remove(config, i)
         has_update = true
@@ -294,7 +294,7 @@ local function invalidate_keys_from_config(config_plugins, keys, log_suffix, dp_
           -- OSS
           if name == "statsd" then
             if utils.table_contains(config.metrics, "lmdb_usage") then
-              has_update =  remove_field_array_value(config.metrics, "lmdb_usage", has_update)
+              has_update = remove_field_array_value(config.metrics, "lmdb_usage", has_update)
             end
           end
         end

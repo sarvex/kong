@@ -110,7 +110,7 @@
 
 - PDK now supports getting plugins' ID with `kong.plugin.get_id`.
   [#9903](https://github.com/Kong/kong/pull/9903)
-- PDK now supports getting lmdb enviroment infomations with `kong.node.get_memory_stats`.
+- PDK now supports getting lmdb environment information with `kong.node.get_memory_stats`.
   [#10301](https://github.com/Kong/kong/pull/10301)
 
 ### Fixes

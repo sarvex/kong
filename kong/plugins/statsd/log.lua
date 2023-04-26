@@ -306,6 +306,7 @@ if ngx.config.ngx_lua_version >= 10011 then
         logger:send_statsd("lmdb.capacity",
           lmdb_info.map_size, logger.stat_types.gauge,
           metric_config.sample_rate, tags, conf.tag_style)
+
       else
         local lmdb_used_space_metric_name = conf.hostname_in_prefix and "lmdb.used_space" or string_format("node.%s.lmdb.used_space", hostname)
         local lmdb_capacity_metric_name = conf.hostname_in_prefix and "lmdb.capacity" or string_format("node.%s.lmdb.capacity", hostname)

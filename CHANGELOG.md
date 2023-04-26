@@ -138,6 +138,8 @@
   [#10680](https://github.com/Kong/kong/pull/10680)
 - Tracing: fix an approximation issue that resulted in reduced precision of the balancer span start and end times.
   [#10681](https://github.com/Kong/kong/pull/10681)
+- Fix an issue where cli `kong vault get` doesn't work in dbless mode.
+  [#10675](https://github.com/Kong/kong/pull/10675)
 
 #### Admin API
 

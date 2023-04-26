@@ -29,7 +29,9 @@ for _, strategy in helpers.each_strategy() do
       describe("Plugins #plugins", function()
 
         before_each(function()
-          service = bp.services:insert()
+          service = bp.services:insert({
+            protocol = "tcp",
+          })
           route = bp.routes:insert({ service = { id = service.id },
                                     protocols = { "tcp" },
                                     sources = { { ip = "127.0.0.1" } },

@@ -20,9 +20,9 @@ local ngx_DEBUG = ngx.DEBUG
 
 
 
-local function has_a_common_protocol_with_entity(plugin, entity)
+local function has_a_common_protocol_with_route(plugin, route)
   local plugin_prot = plugin.protocols
-  local protocols = entity.protocols
+  local protocols = route.protocols
 
   if not protocols then
     return true
@@ -38,6 +38,24 @@ local function has_a_common_protocol_with_entity(plugin, entity)
 end
 
 
+local function has_a_common_protocol_with_service(plugin, service)
+  local plugin_prot = plugin.protocols
+  local protocol = service.protocol
+
+  if not protocol then
+    return true
+  end
+
+  -- plugin.protocols and route.protocols are both sets provided by the schema
+  -- this means that they can be iterated as over an array, and queried as a hash
+  for i = 1, #plugin_prot do
+    if protocol == plugin_prot[i] then
+      return true
+    end
+  end
+end
+
+
 local function check_protocols_match(self, plugin)
   if type(plugin.protocols) ~= "table" then
     return true
@@ -45,7 +63,7 @@ local function check_protocols_match(self, plugin)
 
   if type(plugin.route) == "table" then
     local route = self.db.routes:select(plugin.route) -- ignore error
-    if route and not has_a_common_protocol_with_entity(plugin, route) then
+    if route and not has_a_common_protocol_with_route(plugin, route) then
       local err_t = self.errors:schema_violation({
         protocols = "must match the associated route's protocols",
       })
@@ -55,7 +73,7 @@ local function check_protocols_match(self, plugin)
 
   if type(plugin.service) == "table" then
     local service = self.db.services:select(plugin.service) -- ignore error
-    if service and not has_a_common_protocol_with_entity(plugin, service) then
+    if service and not has_a_common_protocol_with_service(plugin, service) then
       local err_t = self.errors:schema_violation({
         protocols = "must match the associated service's protocol",
       })

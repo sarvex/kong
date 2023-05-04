@@ -9,7 +9,7 @@ return {
 
   fields = {
     { created_at     = typedefs.auto_timestamp_s },
-    { key            = { description = "They key value", type = "string", required = true, unique = true, }, },
+    { key            = { description = "They key value of a parameter", type = "string", required = true, unique = true, }, },
     { value          = { description = "The value attached to the key", type = "string", required = true, }, },
   },
 }

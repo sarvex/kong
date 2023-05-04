@@ -55,32 +55,32 @@ local REDIS_STORAGE_SCHEMA = {
 }
 
 local CONSUL_STORAGE_SCHEMA = {
-  { https = { type = "boolean", default = false, description = "FILL ME"}, },
+  { https = { type = "boolean", default = false, description = "FILL ME WITH SOMETHING MEANINGFUL"}, },
   { host = typedefs.host},
   { port = typedefs.port},
-  { kv_path = { type = "string", description = "FILL ME"}, },
-  { timeout = { type = "number", description = "FILL ME"}, },
-  { token = { type = "string", referenceable = true, description = "FILL ME"}, },
+  { kv_path = { type = "string", description = "FILL ME WITH SOMETHING MEANINGFUL"}, },
+  { timeout = { type = "number", description = "FILL ME WITH SOMETHING MEANINGFUL"}, },
+  { token = { type = "string", referenceable = true, description = "FILL ME WITH SOMETHING MEANINGFUL"}, },
 }
 
 local VAULT_STORAGE_SCHEMA = {
-  { https = { type = "boolean", default = false, description = "FILL ME" }, },
+  { https = { type = "boolean", default = false, description = "FILL ME WITH SOMETHING MEANINGFUL" }, },
   { host = typedefs.host, },
   { port = typedefs.port, },
-  { kv_path = { type = "string", description = "FILL ME" }, },
-  { timeout = { type = "number", description = "FILL ME"}, },
-  { token = { type = "string", referenceable = true, description = "FILL ME" }, },
-  { tls_verify = { type = "boolean", default = true, description = "FILL ME" }, },
-  { tls_server_name = { type = "string", description = "FILL ME"  }, },
-  { auth_method = { type = "string", default = "token", one_of = { "token", "kubernetes" }, description = "FILL ME" } },
-  { auth_path = { type = "string", description = "FILL ME" }, },
-  { auth_role = { type = "string", description = "FILL ME" }, },
-  { jwt_path = { type = "string", description = "FILL ME" }, },
+  { kv_path = { type = "string", description = "FILL ME WITH SOMETHING MEANINGFUL" }, },
+  { timeout = { type = "number", description = "FILL ME WITH SOMETHING MEANINGFUL"}, },
+  { token = { type = "string", referenceable = true, description = "FILL ME WITH SOMETHING MEANINGFUL" }, },
+  { tls_verify = { type = "boolean", default = true, description = "FILL ME WITH SOMETHING MEANINGFUL" }, },
+  { tls_server_name = { type = "string", description = "FILL ME WITH SOMETHING MEANINGFUL"  }, },
+  { auth_method = { type = "string", default = "token", one_of = { "token", "kubernetes" }, description = "FILL ME WITH SOMETHING MEANINGFUL" } },
+  { auth_path = { type = "string", description = "FILL ME WITH SOMETHING MEANINGFUL" }, },
+  { auth_role = { type = "string", description = "FILL ME WITH SOMETHING MEANINGFUL" }, },
+  { jwt_path = { type = "string", description = "FILL ME WITH SOMETHING MEANINGFUL" }, },
 }
 
 local ACCOUNT_KEY_SCHEMA = {
-  { key_id = { type = "string", required = true, description = "FILL ME" } },
-  { key_set = { type = "string", description = "FILL ME" } }
+  { key_id = { type = "string", required = true, description = "FILL ME WITH SOMETHING MEANINGFUL" } },
+  { key_set = { type = "string", description = "FILL ME WITH SOMETHING MEANINGFUL" } }
 }
 
 local schema = {

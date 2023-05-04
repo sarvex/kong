@@ -172,7 +172,7 @@
   [#10663](https://github.com/Kong/kong/pull/10663)
 - **gRPC gateway**: `null` in the JSON payload caused an uncaught exception to be thrown during pb.encode.
   [#10687](https://github.com/Kong/kong/pull/10687)
-- **loggly & tcp-log & udp-log**: fix a potential issue that would socket leak.
+- **loggly & tcp-log & udp-log**: fix a potential issue that could cause socket leaks.
   [#10783](https://github.com/Kong/kong/pull/10783)
 
 

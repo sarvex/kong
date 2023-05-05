@@ -128,7 +128,7 @@ local function new(self)
   --  lmdb = {
   --    map_size: "128.00 MiB",
   --    used_size: "0.02 MiB",
-  --    last_used_page": 6,
+  --    last_used_page: 6,
   --    last_txnid: 2,
   --    max_readers: 126,
   --    current_readers: 16

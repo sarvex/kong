@@ -328,6 +328,9 @@ describe("kong.clustering.compat", function()
             name = "statsd",
             config = {
               metrics = { "shdict_usage", "status_count_per_user_per_route", },
+              flush_timeout = 2,
+              queue_size = 1,
+              retry_count = 10,
             },
           },
         },

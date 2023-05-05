@@ -327,7 +327,7 @@ describe("kong.clustering.compat", function()
           {
             name = "statsd",
             config = {
-              metrics = {"shdict_usage", "status_count_per_user_per_route"}
+              metrics = { "shdict_usage", "status_count_per_user_per_route", },
             },
           },
         },

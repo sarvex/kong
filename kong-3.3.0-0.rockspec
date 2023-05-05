@@ -90,8 +90,10 @@ build = {
     ["kong.templates.nginx"] = "kong/templates/nginx.lua",
     ["kong.templates.nginx_kong"] = "kong/templates/nginx_kong.lua",
     ["kong.templates.nginx_kong_stream"] = "kong/templates/nginx_kong_stream.lua",
-    ["kong.templates.nginx_kong_lmdb"] = "kong/templates/nginx_kong_lmdb.lua",
     ["kong.templates.kong_defaults"] = "kong/templates/kong_defaults.lua",
+    ["kong.templates.nginx_main_inject"] = "kong/templates/nginx_main_inject.lua",
+    ["kong.templates.nginx_http_inject"] = "kong/templates/nginx_http_inject.lua",
+    ["kong.templates.nginx_stream_inject"] = "kong/templates/nginx_stream_inject.lua",
     ["kong.templates.kong_yml"] = "kong/templates/kong_yml.lua",
 
     ["kong.resty.dns.client"] = "kong/resty/dns/client.lua",

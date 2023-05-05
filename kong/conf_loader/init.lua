@@ -549,8 +549,6 @@ local CONF_PARSERS = {
   untrusted_lua_sandbox_requires = { typ = "array" },
   untrusted_lua_sandbox_environment = { typ = "array" },
 
-  legacy_worker_events = { typ = "boolean" },
-
   lmdb_environment_path = { typ = "string" },
   lmdb_map_size = { typ = "string" },
 
@@ -1704,10 +1702,11 @@ local function load(path, custom_conf, opts)
 
           local deref, deref_err = vault.get(v)
           if deref == nil or deref_err then
-            return nil, fmt("failed to dereference '%s': %s for config option '%s'", v, deref_err, k)
-          end
+            if opts.starting then
+              return nil, fmt("failed to dereference '%s': %s for config option '%s'", v, deref_err, k)
+            end
 
-          if deref ~= nil then
+          else
             conf[k] = deref
           end
         end

@@ -16,9 +16,10 @@
   Serverless Functions plugins: it does not provide access to the global kong cache. Access to
   certain fields in kong.configuration has also been restricted.
   [#10417](https://github.com/Kong/kong/pull/10417)
-- **Opentelemetry**: plugin version has been updated to match Kong's version
-  [#10646](https://github.com/Kong/kong/pull/10646)
-
+- **Zipkin**: The zipkin plugin now uses queues for internal
+  buffering.  The standard queue parameter set is available to
+  control queuing behavior.
+  [#10753](https://github.com/Kong/kong/pull/10753)
 
 ### Additions
 
@@ -46,9 +47,16 @@
 - Request and response buffering options are now enabled for incoming HTTP 2.0 requests too.
   Thanks [@PidgeyBE](https://github.com/PidgeyBE) for contributing this change.
   [#10595](https://github.com/Kong/kong/pull/10595)
-  [#10204](https://github.com/Kong/kong/pull/10204)
+  [#10204](https://github.com/Kong/kong/pull/10204)  
+- Add `KONG_UPSTREAM_DNS_TIME` to `kong.ctx` so that we can record the time it takes for DNS
+  resolution when Kong proxies to upstream.
+  [#10355](https://github.com/Kong/kong/pull/10355)
 - Tracing: rename spans to simplify filtering on tracing backends.
   [#10577](https://github.com/Kong/kong/pull/10577)
+- Support timeout for dynamic log level
+  [#10288](https://github.com/Kong/kong/pull/10288)
+- Added new span attribute `http.client_ip` to capture the client IP when behind a proxy.
+  [#10723](https://github.com/Kong/kong/pull/10723)
 
 #### Admin API
 
@@ -100,8 +108,6 @@
   [#9903](https://github.com/Kong/kong/pull/9903)
 
 ### Fixes
-- **gRPC gateway**: `null` in the JSON payload caused an uncaught exception to be thrown during pb.encode.
-  [#10687](https://github.com/Kong/kong/pull/10687)
 
 #### Core
 
@@ -131,6 +137,8 @@
   [#10691](https://github.com/Kong/kong/pull/10691)
 - Fix a typo of mlcache option `shm_set_tries`.
   [#10712](https://github.com/Kong/kong/pull/10712)
+- Fix an issue where slow start up of Go plugin server causes dead lock.
+  [#10561](https://github.com/Kong/kong/pull/10561)
 - Tracing: fix an issue that caused the `sampled` flag of incoming propagation
   headers to be handled incorrectly and only affect some spans.
   [#10655](https://github.com/Kong/kong/pull/10655)
@@ -140,6 +148,8 @@
   [#10681](https://github.com/Kong/kong/pull/10681)
 - Fix protocol detection of default values.
   [#10736](https://github.com/Kong/kong/pull/10736)
+- Fix issue when stopping a Kong could error out if using Vault references
+  [#10775](https://github.com/Kong/kong/pull/10775)
 
 #### Admin API
 
@@ -160,6 +170,8 @@
 - **OpenTelemetry**: fix an issue that caused spans to be propagated incorrectly
   resulting in a wrong hierarchy being rendered on tracing backends.
   [#10663](https://github.com/Kong/kong/pull/10663)
+- **gRPC gateway**: `null` in the JSON payload caused an uncaught exception to be thrown during pb.encode.
+  [#10687](https://github.com/Kong/kong/pull/10687)
 
 
 #### PDK
@@ -232,6 +244,10 @@
   [#10562](https://github.com/Kong/kong/pull/10562)
 - Bumped lua-resty-events from 0.1.3 to 0.1.4
   [#10634](https://github.com/Kong/kong/pull/10634)
+- Bumped lua-kong-nginx-module from 0.5.1 to 0.6.0
+  [#10288](https://github.com/Kong/kong/pull/10288)
+- Bumped lua-resty-lmdb from 1.0.0 to 1.1.0
+  [#10766](https://github.com/Kong/kong/pull/10766)
 
 ## 3.2.0
 

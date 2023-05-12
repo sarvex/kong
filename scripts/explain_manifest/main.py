@@ -64,17 +64,17 @@ def gather_files(path: str):
         atexit.register(t.cleanup)
 
         if ext == ".deb":
-            code = os.system(
-                "ar p %s data.tar.gz | tar -C %s -xz" % (path, t.name))
+            code = os.system(f"ar p {path} data.tar.gz | tar -C {t.name} -xz")
         elif ext == ".rpm":
             # GNU cpio and rpm2cpio is needed
             code = os.system(
-                "rpm2cpio %s | cpio --no-preserve-owner --no-absolute-filenames -idm -D %s" % (path, t.name))
+                f"rpm2cpio {path} | cpio --no-preserve-owner --no-absolute-filenames -idm -D {t.name}"
+            )
         elif ext == ".gz":
-            code = os.system("tar -C %s -xf %s" % (t.name, path))
+            code = os.system(f"tar -C {t.name} -xf {path}")
 
         if code != 0:
-            raise Exception("Failed to extract %s" % path)
+            raise Exception(f"Failed to extract {path}")
 
         return t.name
     elif not Path(path).is_dir():
@@ -89,7 +89,7 @@ def walk_files(path: str):
         full_path = os.path.join(path, file)
 
         if not file.startswith("/") and not file.startswith("./"):
-            file = '/' + file  # prettifier
+            file = f'/{file}'
 
         if os.path.basename(file) == "nginx":
             f = NginxInfo(full_path, file)
@@ -121,7 +121,7 @@ def write_manifest(title: str, results: List[FileInfo], globs: List[str], opts: 
             if isinstance(v, list):
                 v = ("\n" + " " * ident + "- ").join([""] + v)
             else:
-                v = " %s" % v
+                v = f" {v}"
             if first:
                 f.write("-" + (" " * (ident-1)))
                 first = False
@@ -150,9 +150,9 @@ if __name__ == "__main__":
     infos = walk_files(directory)
 
     if Path(args.path).is_file():
-        title = "contents in archive %s" % args.path
+        title = f"contents in archive {args.path}"
     else:
-        title = "contents in directory %s" % args.path
+        title = f"contents in directory {args.path}"
 
     globs = read_glob(args.file_list)
 
@@ -160,12 +160,13 @@ if __name__ == "__main__":
 
     if args.suite:
         if args.suite not in config.targets:
-            closest = difflib.get_close_matches(
-                config.targets.keys(), args.suite, 1)
-            maybe = ""
-            if closest:
-                maybe = ", maybe you meant %s" % closest[0]
-            raise Exception("Unknown suite %s%s" % (args.suite, maybe))
+            if closest := difflib.get_close_matches(
+                config.targets.keys(), args.suite, 1
+            ):
+                maybe = f", maybe you meant {closest[0]}"
+            else:
+                maybe = ""
+            raise Exception(f"Unknown suite {args.suite}{maybe}")
         E = ExpectChain(infos)
         E.compare_manifest(config.targets[args.suite], manifest)
         E.run(config.targets[args.suite])

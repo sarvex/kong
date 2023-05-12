@@ -36,17 +36,17 @@ class ExplainOpts():
     version_requirement = False
 
     @classmethod
-    def from_args(this, args):
-        this.owners = args.owners
-        this.mode = args.mode
-        this.size = args.size
-        this.arch = args.arch
-        this.merge_rpaths_runpaths = args.merge_rpaths_runpaths
-        this.imported_symbols = args.imported_symbols
-        this.exported_symbols = args.exported_symbols
-        this.version_requirement = args.version_requirement
+    def from_args(cls, args):
+        cls.owners = args.owners
+        cls.mode = args.mode
+        cls.size = args.size
+        cls.arch = args.arch
+        cls.merge_rpaths_runpaths = args.merge_rpaths_runpaths
+        cls.imported_symbols = args.imported_symbols
+        cls.exported_symbols = args.exported_symbols
+        cls.version_requirement = args.version_requirement
 
-        return this
+        return cls
 
 
 class FileInfo():
@@ -68,13 +68,12 @@ class FileInfo():
     def explain(self, opts: ExplainOpts):
         lines = [("Path", self.relpath)]
         if hasattr(self, "link"):
-            lines.append(("Link", self.link))
-            lines.append(("Type", "link"))
+            lines.extend((("Link", self.link), ("Type", "link")))
         elif hasattr(self, "directory"):
             lines.append(("Type", "directory"))
 
         if opts.owners:
-            lines.append(("Uid,Gid",  "%s, %s" % (self.uid, self.gid)))
+            lines.append(("Uid,Gid", f"{self.uid}, {self.gid}"))
         if opts.mode:
             lines.append(("Mode", oct(self.mode)))
         if opts.size:
@@ -167,10 +166,10 @@ class ElfFileInfo(FileInfo):
         if opts.imported_symbols and self.get_imported_symbols:
             lines.append(("Imported", self.get_imported_symbols()))
         if opts.version_requirement and self.version_requirement:
-            req = []
-            for k in sorted(self.version_requirement):
-                req.append("%s: %s" %
-                           (k, ", ".join(self.version_requirement[k])))
+            req = [
+                f'{k}: {", ".join(self.version_requirement[k])}'
+                for k in sorted(self.version_requirement)
+            ]
             lines.append(("Version Requirement", req))
 
         return pline + lines
@@ -204,7 +203,7 @@ class NginxInfo(ElfFileInfo):
                         self.nginx_modules.append(os.path.join(pdir, mname))
                 self.nginx_modules = sorted(self.nginx_modules)
             elif m := re.match("^built with (.+) \(running with", s):
-                self.nginx_compiled_openssl = m.group(1).strip()
+                self.nginx_compiled_openssl = m[1].strip()
 
         # Fetch DWARF infos
         with open(path, "rb") as f:
@@ -213,7 +212,7 @@ class NginxInfo(ElfFileInfo):
             self.has_ngx_http_request_t_DW = False
             dwarf_info = elffile.get_dwarf_info()
             for cu in dwarf_info.iter_CUs():
-                dies = [die for die in cu.iter_DIEs()]
+                dies = list(cu.iter_DIEs())
                 # Too many DIEs in the binary, we just check those in `ngx_http_request`
                 if "ngx_http_request" in dies[0].attributes['DW_AT_name'].value.decode('utf-8'):
                     for die in dies:
@@ -226,11 +225,13 @@ class NginxInfo(ElfFileInfo):
     def explain(self, opts: ExplainOpts):
         pline = super().explain(opts)
 
-        lines = []
-        lines.append(("Modules", self.nginx_modules))
-        lines.append(("OpenSSL", self.nginx_compiled_openssl))
-        lines.append(("DWARF", self.has_dwarf_info))
-        lines.append(("DWARF - ngx_http_request_t related DWARF DIEs",
-                     self.has_ngx_http_request_t_DW))
-
+        lines = [
+            ("Modules", self.nginx_modules),
+            ("OpenSSL", self.nginx_compiled_openssl),
+            ("DWARF", self.has_dwarf_info),
+            (
+                "DWARF - ngx_http_request_t related DWARF DIEs",
+                self.has_ngx_http_request_t_DW,
+            ),
+        ]
         return pline + lines

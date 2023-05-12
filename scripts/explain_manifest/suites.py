@@ -61,15 +61,29 @@ def common_suites(expect, fips: bool = False):
 
 def libc_libcpp_suites(expect, max_libc: str, max_libcpp: str):
     if max_libc:
-        expect("**/*.so", "libc version is less than %s" % max_libc) \
-            .version_requirement.key("libc.so.6").is_not().greater_than("GLIBC_%s" % max_libc) \
-            .version_requirement.key("libdl.so.2").is_not().greater_than("GLIBC_%s" % max_libc) \
-            .version_requirement.key("libpthread.so.0").is_not().greater_than("GLIBC_%s" % max_libc) \
-            .version_requirement.key("librt.so.1").is_not().greater_than("GLIBC_%s" % max_libc) \
-
+        expect(
+            "**/*.so", f"libc version is less than {max_libc}"
+        ).version_requirement.key("libc.so.6").is_not().greater_than(
+            f"GLIBC_{max_libc}"
+        ).version_requirement.key(
+            "libdl.so.2"
+        ).is_not().greater_than(
+            f"GLIBC_{max_libc}"
+        ).version_requirement.key(
+            "libpthread.so.0"
+        ).is_not().greater_than(
+            f"GLIBC_{max_libc}"
+        ).version_requirement.key(
+            "librt.so.1"
+        ).is_not().greater_than(
+            f"GLIBC_{max_libc}"
+        )
     if max_libcpp:
-        expect("**/*.so", "libc version is less than %s" % max_libcpp) \
-            .version_requirement.key("libstdc++.so.6").is_not().greater_than("GLIBCXX_%s" % max_libcpp)
+        expect(
+            "**/*.so", f"libc version is less than {max_libcpp}"
+        ).version_requirement.key("libstdc++.so.6").is_not().greater_than(
+            f"GLIBCXX_{max_libcpp}"
+        )
 
 
 def arm64_suites(expect):

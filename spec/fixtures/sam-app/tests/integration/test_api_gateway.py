@@ -30,12 +30,14 @@ class TestApiGateway:
 
         stacks = response["Stacks"]
         stack_outputs = stacks[0]["Outputs"]
-        api_outputs = [output for output in stack_outputs if output["OutputKey"] == "HelloWorldApi"]
-
-        if not api_outputs:
+        if api_outputs := [
+            output
+            for output in stack_outputs
+            if output["OutputKey"] == "HelloWorldApi"
+        ]:
+            return api_outputs[0]["OutputValue"]  # Extract url from stack outputs
+        else:
             raise KeyError(f"HelloWorldAPI not found in stack {stack_name}")
-
-        return api_outputs[0]["OutputValue"]  # Extract url from stack outputs
 
     def test_api_gateway(self, api_gateway_url):
         """ Call the API Gateway endpoint and check the response """

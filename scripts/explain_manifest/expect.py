@@ -39,27 +39,30 @@ def write_color(color):
     def decorator(fn):
         def wrapper(self, *args):
             if color not in term_colors:
-                raise ValueError("unknown color %s" % color)
+                raise ValueError(f"unknown color {color}")
             sys.stdout.write('\033[%dm' % term_colors[color])
             r = fn(self, *args)
             sys.stdout.write('\033[0m')
             return r
+
         return wrapper
+
     return decorator
 
 
 def write_block_desc(desc_verb):
     def decorator(fn):
         def wrapper(self, suite: ExpectSuite, *args):
-            ExpectChain._log("[INFO] start to %s of suite %s" %
-                             (desc_verb, suite.name))
+            ExpectChain._log(f"[INFO] start to {desc_verb} of suite {suite.name}")
             start_time = time.time()
             r = fn(self, suite, *args)
             duration = time.time() - start_time
             ExpectChain._log("[INFO] finish to %s of suite %s in %.2fms" % (
                 desc_verb, suite.name, duration*1000))
             return r
+
         return wrapper
+
     return decorator
 
 
@@ -101,30 +104,30 @@ class ExpectChain():
         return "%s:%d" % (fn_rel, f.f_lineno)
 
     @classmethod
-    def _log(self, *args):
-        sys.stdout.write(" %s " % datetime.datetime.now().strftime('%b %d %X'))
+    def _log(cls, *args):
+        sys.stdout.write(f" {datetime.datetime.now().strftime('%b %d %X')} ")
         print(*args)
 
     @write_color("white")
     def _print_title(self):
         if self._title_shown:
             return
-        self._log("[TEST] %s: %s" % (self._ctx_info(), self._msg))
+        self._log(f"[TEST] {self._ctx_info()}: {self._msg}")
         self._title_shown = True
 
     @write_color("red")
     def _print_fail(self, msg):
-        self._log("[FAIL] %s" % msg)
-        self._all_failures.append("%s: %s" % (self._ctx_info(), msg))
+        self._log(f"[FAIL] {msg}")
+        self._all_failures.append(f"{self._ctx_info()}: {msg}")
         self._failures_count += 1
 
     @write_color("green")
     def _print_ok(self, msg):
-        self._log("[OK  ] %s" % msg)
+        self._log(f"[OK  ] {msg}")
 
     @write_color("yellow")
     def _print_error(self, msg):
-        self._log("[FAIL] %s" % msg)
+        self._log(f"[FAIL] {msg}")
 
     def _print_result(self):
         if self._checks_count == 0:
@@ -187,38 +190,34 @@ class ExpectChain():
 
     def _less_than(self, attr, expect):
         def fn(a):
-            if isinstance(a, list):
-                ll = sorted(list(a))[-1]
-            else:
-                ll = a
+            ll = sorted(list(a))[-1] if isinstance(a, list) else a
             return ll < expect, "'{}' is {NOT} less than %s" % expect
+
         return self._compare(attr, fn)
 
     def _greater_than(self, attr, expect):
         def fn(a):
-            if isinstance(a, list):
-                ll = sorted(list(a))[0]
-            else:
-                ll = a
+            ll = sorted(list(a))[0] if isinstance(a, list) else a
             return ll > expect, "'{}' is {NOT} greater than %s" % expect
+
         return self._compare(attr, fn)
 
     def _contain(self, attr, expect):
         def fn(a):
-            if isinstance(a, list):
-                ok = expect in a
-                msg = "'%s' is {NOT} found in the list" % expect
-                if not ok:
-                    if len(a) == 0:
-                        msg = "'%s' is empty" % attr
-                    else:
-                        closest = difflib.get_close_matches(expect, a, 1)
-                        if len(closest) > 0:
-                            msg += ", did you mean '%s'?" % closest[0]
-                return ok, msg
-            else:
-                return False, "%s is not a list" % attr
-            # should not reach here
+            if not isinstance(a, list):
+                return False, f"{attr} is not a list"
+            ok = expect in a
+            msg = "'%s' is {NOT} found in the list" % expect
+            if not ok:
+                if len(a) == 0:
+                    msg = f"'{attr}' is empty"
+                else:
+                    closest = difflib.get_close_matches(expect, a, 1)
+                    if len(closest) > 0:
+                        msg += f", did you mean '{closest[0]}'?"
+            return ok, msg
+                # should not reach here
+
         return self._compare(attr, fn)
 
     def _contain_match(self, attr, expect):
@@ -230,7 +229,8 @@ class ExpectChain():
                         return True, msg
                 return False, msg
             else:
-                return False, "'%s' is not a list" % attr
+                return False, f"'{attr}' is not a list"
+
         return self._compare(attr, fn)
 
     # following are public methods (test functions)
@@ -303,7 +303,7 @@ class ExpectChain():
                 return dummy_call
 
         def cls(expect):
-            getattr(self, "_%s" % verb)(attr, expect)
+            getattr(self, f"_{verb}")(attr, expect)
             return self
 
         return cls
@@ -313,7 +313,7 @@ class ExpectChain():
         self._current_suite = suite
 
         if not suite.manifest:
-            self._print_error("manifest is not set for suite %s" % suite.name)
+            self._print_error(f"manifest is not set for suite {suite.name}")
         else:
             diff_result = subprocess.run(
                 ['diff', "-BbNaur", suite.manifest, '-'], input=manifest, stdout=subprocess.PIPE)
